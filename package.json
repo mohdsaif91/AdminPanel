@@ -43,6 +43,6 @@
   ],
   "devDependencies": {
     "react-to-print": "^2.1.1"
-  },
-  "proxy": "https://flashitapi.herokuapp.com"
+  }
+
 }
