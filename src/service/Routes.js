@@ -1,17 +1,18 @@
-const baseUrlV1 = "https://flashitapi.herokuapp.com/v1";
+const baseUrlV1 = 'https://flashitapi.herokuapp.com/v1';
 
 const loginurl = `${baseUrlV1}/login`;
 const resturant = `${baseUrlV1}/Resturant`;
 
 const routes = {
-  login: {
-    adminLogin: `${baseUrlV1}/auth`,
-    shopLogin: `${loginurl}/shop-auth`,
-    tokenIsValid: `${loginurl}/tokenIsValid`,
-    getUser: `${baseUrlV1}login`,
-  },
-  resturant: {
-    addResturant: `${resturant}/addResturant`,
-  },
+	login: {
+		adminLogin: `${baseUrlV1}/auth`,
+		shopLogin: `${loginurl}/shop-auth`,
+		tokenIsValid: `${loginurl}/tokenIsValid`,
+		getUser: `${baseUrlV1}login`,
+	},
+	resturant: {
+		addResturant: `${baseUrlV1}/shops`,
+		getResturant: `${baseUrlV1}/shops`,
+	},
 };
 export default routes;

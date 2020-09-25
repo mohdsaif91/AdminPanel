@@ -44,6 +44,7 @@ export const SignIn1 = (props) => {
           }
         })
         .catch((erros) => {
+          console.log(erros);
           setLog("Username or Password is Incorrect");
         });
     } else {

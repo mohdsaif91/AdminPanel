@@ -27,7 +27,8 @@ const headers = {
   "Content-type": "application/json",
 };
 
-async function axiosCall(url, method, data, headers) {
+async function axiosCall(url, method, data, headers, log) {
+  console.log("hi mans" + log);
   const authToken = localStorage.getItem("auth-token");
   const authAxios = axios.create({
     headers: {
@@ -35,9 +36,9 @@ async function axiosCall(url, method, data, headers) {
       "Content-type": "application/json",
     },
   });
-  if (authToken) {
-    console.log("inside");
-    return await authAxios({ method, url, data, headers }).then((response) => {
+  if (log) {
+    console.log("true hai ");
+    return await axios({ method, url, data }).then((response) => {
       if (response.status === 401 || response.status === 403) {
         return "Something Went Wrong";
       }
@@ -47,7 +48,22 @@ async function axiosCall(url, method, data, headers) {
       return response;
     });
   } else {
-    console.log("outSide");
+    console.log("true nai  hai ");
+    if (authToken) {
+      return await authAxios({ method, url, data, headers }).then(
+        (response) => {
+          if (response.status === 401 || response.status === 403) {
+            return "Something Went Wrong";
+          }
+          if (response.ok) {
+            return response;
+          }
+          return response;
+        }
+      );
+    } else {
+      console.log("outSide");
+    }
   }
 }
 

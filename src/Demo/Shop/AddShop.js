@@ -13,25 +13,20 @@ import { Resturant } from "../../service";
 
 const initialState = {
   name: "",
-  minAmount: 0,
-  offerPercentage: 0,
-  contactDetials: "",
-  estimatedDeliveryTime: "",
+  phone: "",
   description: "",
-  location: "",
-  status: 1,
+  status: "ACTIVE",
   address: "",
-  everyDay: false,
-  openTime: "",
-  closeTime: "",
-  latitude: "",
-  longitude: "",
-  imageUrlId: "",
-};
-const initialAuth = {
+  available: false,
+  recommended: false,
+  lat: "",
+  lng: "",
+  logo: "",
   email: "",
   password: "",
+  type: "Resturant",
 };
+const initialAuth = {};
 const errorState = {
   email: "",
   contactNumber: "",
@@ -48,12 +43,17 @@ export default function AddShop() {
   const el = useRef();
 
   const getData = (e) => {
-    if (e.target.name === "email") {
+    if (e.target.name === "logo") {
+      setData({
+        ...data,
+        logo: e.target.files[0],
+      });
+    } else if (e.target.name === "email") {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       const d = re.test(String(e.target.value).toLowerCase());
       if (d) {
-        setAuth({
-          ...auth,
+        setData({
+          ...data,
           [e.target.name]: e.target.value,
         });
         setError({
@@ -67,17 +67,34 @@ export default function AddShop() {
         });
       }
     } else if (e.target.name === "password") {
-      setAuth({
-        ...auth,
+      setData({
+        ...data,
         [e.target.name]: e.target.value,
       });
-    } else if (e.target.name === "everyDay") {
+    } else if (e.target.name === "available") {
       setData({
         ...data,
         [e.target.name]: e.target.checked,
       });
+    } else if (e.target.name === "recommended") {
+      setData({
+        ...data,
+        [e.target.name]: e.target.checked,
+      });
+    } else if (e.target.name === "status") {
+      const status = e.target.options[e.target.selectedIndex].text;
+      setData({
+        ...data,
+        [e.target.name]: status,
+      });
+    } else if (e.target.name === "type") {
+      const type = e.target.options[e.target.selectedIndex].text;
+      setData({
+        ...data,
+        [e.target.name]: type,
+      });
     } else if (e.target.name === "confirmPassword") {
-      const prePass = auth.password;
+      const prePass = data.password;
       const newPass = e.target.value;
       if (prePass !== newPass) {
         setError({
@@ -115,37 +132,35 @@ export default function AddShop() {
       });
     }
   };
-  const singleFileChangedHandler = (e) => {
-    const file = e.target.files[0];
-    const imageName = file.name.split(".");
-    const imageUrlId = `${uuid()}.${imageName[1]}`;
-    setId(imageUrlId);
-    setData({
-      ...data,
-      imageUrlId: imageUrlId,
+
+  const getFormData = (data) => {
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      console.log(key, data[key]);
+      formData.append(key, data[key]);
     });
-    setFile(file);
+    return formData;
   };
+
   const displayData = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("ResturantData", JSON.stringify(data));
-    formData.append("AuthData", JSON.stringify(auth));
-    formData.append("imageUrlId", id);
-    formData.append("image", file);
     console.log(data);
-    if (!error.error) {
-      console.log("no err");
-      Resturant.addResturant(formData)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      console.log("yes error<>");
-    }
+    // const formData = new FormData();
+    const formData = getFormData(data);
+
+    // formData.append("AuthData", JSON.stringify(auth));
+    // formData.append("imageUrlId", id);
+    // formData.append("image", file);
+    // console.log(data);
+    // if (!error.error) {
+    //   console.log("no err");
+    Resturant.addResturant(formData)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -169,13 +184,7 @@ export default function AddShop() {
                         placeholder="Enter Name"
                         name="name"
                         onChange={(e) => getData(e)}
-                        // {...formik.getFieldProps("name")}
                       />
-                      {/* {formik.errors.name && formik.touched.name ? (
-                        <div className="row text-danger mt-1 mx-auto">
-                          {formik.errors.name}
-                        </div>
-                      ) : null} */}
                     </Form.Group>
                     <Form.Group controlId="email">
                       <Form.Label>Email Address</Form.Label>
@@ -197,7 +206,7 @@ export default function AddShop() {
                         required
                         type="number"
                         placeholder="Enter Contact Details"
-                        name="contactDetials"
+                        name="phone"
                         onChange={(e) => getData(e)}
                       />
                       <div className="row text-danger mt-1 mx-auto">
@@ -223,7 +232,6 @@ export default function AddShop() {
                         name="confirmPassword"
                         onChange={(e) => getData(e)}
                       />
-
                       <div className="row text-danger mt-1 mx-auto">
                         {error.confirmPass}
                       </div>
@@ -236,46 +244,13 @@ export default function AddShop() {
                         name="status"
                         onChange={(e) => getData(e)}
                       >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>ACTIVE</option>
+                        <option>INACTIVE</option>
                       </Form.Control>
                     </Form.Group>
                   </Col>
 
                   <Col md={6}>
-                    <Form.Group controlId="min-ammount">
-                      <Form.Label>Min Amount</Form.Label>
-                      <Form.Control
-                        required
-                        type="type"
-                        placeholder="Enter Min Amount"
-                        name="minAmount"
-                        onChange={(e) => getData(e)}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="off-percenatge">
-                      <Form.Label>Offer Percentage</Form.Label>
-                      <Form.Control
-                        required
-                        type="type"
-                        placeholder="Enter Min Amount for Offer"
-                        name="offerPercentage"
-                        onChange={(e) => getData(e)}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="est-delivery time">
-                      <Form.Label>Estimated delivery time(Minutes)</Form.Label>
-                      <Form.Control
-                        required
-                        type="type"
-                        placeholder="Enter Max Delivery Time"
-                        name="estimatedDeliveryTime"
-                        onChange={(e) => getData(e)}
-                      />
-                    </Form.Group>
                     <Form.Group controlId="description">
                       <Form.Label>Description</Form.Label>
                       <Form.Control
@@ -286,16 +261,7 @@ export default function AddShop() {
                         onChange={(e) => getData(e)}
                       />
                     </Form.Group>
-                    <Form.Group controlId="location">
-                      <Form.Label>Location</Form.Label>
-                      <Form.Control
-                        required
-                        type="text"
-                        placeholder="Location"
-                        name="location"
-                        onChange={(e) => getData(e)}
-                      />
-                    </Form.Group>
+
                     <Form.Group controlId="Address">
                       <Form.Label>Address</Form.Label>
                       <Form.Control
@@ -306,63 +272,60 @@ export default function AddShop() {
                         onChange={(e) => getData(e)}
                       />
                     </Form.Group>
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col md={6}>
-                    <Row>
-                      <Col md="4">
-                        <Form.Group
-                          controlId="everyday"
-                          className="align-content-start"
-                        >
-                          <Form.Label>Every day</Form.Label>
-                          <Form.Control
-                            required
-                            type="checkbox"
-                            name="everyDay"
-                            onChange={(e) => getData(e)}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col md={4}>
-                        <Form.Group controlId="shopopen">
-                          <Form.Label>Shop Open</Form.Label>
-                          <Form.Control
-                            required
-                            type="text"
-                            name="openTime"
-                            placeholder="9:00"
-                            onChange={(e) => getData(e)}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col md={4}>
-                        <Form.Group controlId="shopclose">
-                          <Form.Label>Shop Close</Form.Label>
-                          <Form.Control
-                            required
-                            type="text"
-                            name="closeTime"
-                            placeholder="18:00"
-                            onChange={(e) => getData(e)}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md="auto">
-                        <Form.Group>
-                          <Form.Label>Shop logo</Form.Label>
-                          <input
-                            required
-                            type="file"
-                            ref={el}
-                            name="file"
-                            onChange={(e) => singleFileChangedHandler(e)}
-                          />
-                          {/* <ImageUploader
+                    <Form.Group controlId="select">
+                      <Form.Label>Type</Form.Label>
+                      <Form.Control
+                        required
+                        as="select"
+                        name="type"
+                        onChange={(e) => getData(e)}
+                      >
+                        <option>Resturant</option>
+                        <option>Home</option>
+                      </Form.Control>
+                    </Form.Group>
+                    <Col md={6}>
+                      <Row>
+                        <Col md={6}>
+                          <Form.Group
+                            controlId="everyday"
+                            className="align-content-start"
+                          >
+                            <Form.Label>Available</Form.Label>
+                            <Form.Control
+                              required
+                              type="checkbox"
+                              name="available"
+                              onChange={(e) => getData(e)}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                          <Form.Group
+                            controlId="recommended"
+                            className="align-content-start"
+                          >
+                            <Form.Label>Recommended</Form.Label>
+                            <Form.Control
+                              required
+                              type="checkbox"
+                              name="recommended"
+                              onChange={(e) => getData(e)}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Form.Group className="mt-5">
+                      <Form.Label>Shop logo</Form.Label>
+                      <input
+                        required
+                        type="file"
+                        ref={el}
+                        name="logo"
+                        onChange={(e) => getData(e)}
+                      />
+                      {/* <ImageUploader
                             withIcon={true}
                             withPreview={true}
                             buttonText="Choose images"
@@ -370,39 +333,39 @@ export default function AddShop() {
                             imgExtension={[".jpg", ".gif", ".png", ".gif"]}
                             maxFileSize={5242880}
                           /> */}
-                          {/* <Draginput onChange={(e) => getImages(e)} /> */}
-                        </Form.Group>
-                      </Col>
-                    </Row>
+                      {/* <Draginput onChange={(e) => getImages(e)} /> */}
+                    </Form.Group>
                   </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="Latitude">
+                      <Form.Label>Latitude</Form.Label>
+                      <Form.Control
+                        required
+                        type="text"
+                        name="lat"
+                        onChange={(e) => getData(e)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="Longitude">
+                      <Form.Label>Longitude</Form.Label>
+                      <Form.Control
+                        required
+                        type="text"
+                        name="lng"
+                        onChange={(e) => getData(e)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row></Row>
+
+                <Row>
                   <Col md={6}>{/* <GoogleApiWrapper /> */}</Col>
                 </Row>
                 <Row>
                   <Col md={6}></Col>
-                  <Row>
-                    <Col md={6}>
-                      <Form.Group controlId="Latitude">
-                        <Form.Label>Latitude</Form.Label>
-                        <Form.Control
-                          required
-                          type="text"
-                          name="latitude"
-                          onChange={(e) => getData(e)}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                      <Form.Group controlId="Longitude">
-                        <Form.Label>Longitude</Form.Label>
-                        <Form.Control
-                          required
-                          type="text"
-                          name="longitude"
-                          onChange={(e) => getData(e)}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
                 </Row>
                 <Row className="mt-5">
                   <Col md={6}>
