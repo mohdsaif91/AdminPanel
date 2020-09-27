@@ -13,6 +13,7 @@ const routes = {
 	resturant: {
 		addResturant: `${baseUrlV1}/shops`,
 		getResturant: `${baseUrlV1}/shops`,
+		editResturant:`${baseUrlV1}/shops`
 	},
 };
 export default routes;

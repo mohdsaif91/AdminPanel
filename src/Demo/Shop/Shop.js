@@ -1,111 +1,135 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Form, Button, Table } from 'react-bootstrap';
-import { Resturant } from '../../service';
+import React, { useEffect, useState } from "react";
+import { Row, Col, Card, Form, Button, Table } from "react-bootstrap";
+import { Resturant } from "../../service";
 
-import Aux from '../../hoc/_Aux';
-import croma from '../../assets/images/cromaImage.jpg';
-import relianceimg from '../../assets/images/reliance.jpg';
-import wallMart from '../../assets/images/walmart.jpg';
+import Aux from "../../hoc/_Aux";
 
-const initialData = {
-	data: [],
-};
+export default function Shop(props) {
+  const [resturant, setResturant] = useState([]);
+  const [serach, setSearch] = useState("");
+  const [filteredCountries, setFilteredResturant] = useState([]);
 
-export default function Shop() {
-	const [shop, setShop] = useState({ ...initialData });
-	useEffect(() => {
-		Resturant.getResturant().then((res) => {
-			console.log(res.data);
-			const resData = res.data;
-			setShop({
-				data: resData,
-			});
-		});
-	}, []);
+  useEffect(() => {
+    Resturant.getResturant().then((res) => {
+      setResturant(res.data);
+    });
+  }, []);
 
-	const searchRestHom = (e) => {
-		const filteredData = shop.data.filter((f) => {
-			if (e.target.value === f.name) {
-				console.log(f);
-			}
-		});
-		setShop(filteredData);
-	};
-	const changeStatus = () => {};
+  useEffect(() => {
+    setFilteredResturant(
+      resturant.filter((f) => {
+        if (f.name.toLowerCase().includes(serach.toLowerCase)) console.log(f);
+        return f;
+      })
+    );
+  }, [serach, resturant]);
 
-	return (
-		<Aux>
-			<Row>
-				<Col>
-					<Card>
-						<Card.Header>
-							<Row>
-								<Col>
-									<Card.Title as="h3">Shop List</Card.Title>
-									<Form inline>
-										<Form.Group className="mt-2 mb-2">
-											<Form.Control
-												type="text"
-												onChange={(e) => searchRestHom(e)}
-												placeholder="Search"
-											/>
-										</Form.Group>
-									</Form>
-								</Col>
-								<Col>
+  const handleSwitch = (elem, state) => {
+    console.log(state);
+  };
+
+  const searchRestHom = (e) => {
+    setSearch(e.target.value);
+    // const filteredData = shop.data.filter((f) => {
+    //   if (f.name.includes(e.target.value)) {
+    //     return f;
+    //   }
+    // });
+    // console.log(filteredData);
+    // setShop(filteredData);
+  };
+  const changeStatus = () => {};
+  const goToAddShop = (e) => {
+    const data = shop.filter((f) => {
+      if (f.id === parseInt(e.target.id)) {
+        return f;
+      }
+    });
+    props.history.push({
+      pathname: "/addShop",
+      editShopData: data,
+    });
+  };
+
+  return (
+    <Aux>
+      <Row>
+        <Col>
+          <Card>
+            <Card.Header>
+              <Row>
+                <Col>
+                  <Card.Title as="h3">Shop List</Card.Title>
+                  <Form inline>
+                    <Form.Group className="mt-2 mb-2">
+                      <Form.Control
+                        type="text"
+                        onChange={(e) => searchRestHom(e)}
+                        placeholder="Search"
+                      />
+                    </Form.Group>
+                  </Form>
+                </Col>
+                {/* <Col>
 									<span className="d-block mt-5"></span>
 									<Button>Copy</Button>
 									<Button>CSV</Button>
 									<Button>Excel</Button>
 									<Button>Print</Button>
 									<Button>PDF</Button>
-								</Col>
-							</Row>
-						</Card.Header>
-						<Card.Body>
-							<Table responsive>
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>Shop Name</th>
-										<th>Image</th>
-										<th>Status</th>
-										<th>Action</th>
-										<th>Type</th>
-									</tr>
-								</thead>
-								<tbody>
-									{shop.data.map((m) => (
-										<tr key={m.id}>
-											<th scope="row">{m.id}</th>
-											<td>{m.name}</td>
-											<td>
-												<img className="shopBannerImage" src={m.logo} />
-											</td>
-											<td>{m.status}</td>
-											<td>
-												<div className="toggle-switch blue">
-													<input
-														type="checkbox"
-														checked={true}
-														id="toggle1"
-														className="button"
-														onChange={changeStatus}
-													/>
-													<label htmlFor="toggle1" className="border">
-														toggle button
-													</label>
-												</div>
-											</td>
-											<td>{m.type}</td>
-										</tr>
-									))}
-								</tbody>
-							</Table>
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
-		</Aux>
-	);
+								</Col> */}
+              </Row>
+            </Card.Header>
+            <Card.Body>
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Shop Name</th>
+                    <th>Image</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCountries.map((m) => (
+                    <tr key={m.id}>
+                      <th scope="row">{m.id}</th>
+                      <td>{m.name}</td>
+                      <td>
+                        <img className="shopBannerImage" src={m.logo} />
+                      </td>
+                      <td>{m.status}</td>
+                      <td>
+                        <label className="switch">
+                          {/* {...formik.getFieldProps('checkbox') */}
+                          {/* m.status==='ACTIVE'?true:false */}
+                          <input
+                            type="radio"
+                            isChecked={m.status === "ACTIVE" ? true : false}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      </td>
+                      <td>{m.type}</td>
+                      <td>
+                        <Button
+                          id={m.id}
+                          variant="danger"
+                          onClick={(e) => goToAddShop(e)}
+                        >
+                          Edit
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Aux>
+  );
 }
