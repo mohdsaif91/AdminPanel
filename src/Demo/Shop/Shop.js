@@ -4,41 +4,56 @@ import { Resturant } from "../../service";
 
 import Aux from "../../hoc/_Aux";
 
-export default function Shop(props) {
-  const [resturant, setResturant] = useState([]);
-  const [serach, setSearch] = useState("");
-  const [filteredCountries, setFilteredResturant] = useState([]);
+const initialData = {};
 
+export default function Shop(props) {
+  const [shop, setShop] = useState([]);
   useEffect(() => {
     Resturant.getResturant().then((res) => {
-      setResturant(res.data);
+      const resData = res.data;
+      setShop(resData);
     });
   }, []);
-
-  useEffect(() => {
-    setFilteredResturant(
-      resturant.filter((f) => {
-        if (f.name.toLowerCase().includes(serach.toLowerCase)) console.log(f);
-        return f;
-      })
-    );
-  }, [serach, resturant]);
 
   const handleSwitch = (elem, state) => {
     console.log(state);
   };
 
   const searchRestHom = (e) => {
-    setSearch(e.target.value);
-    // const filteredData = shop.data.filter((f) => {
-    //   if (f.name.includes(e.target.value)) {
-    //     return f;
-    //   }
-    // });
-    // console.log(filteredData);
+    const filteredData = shop.filter((f) => {
+      if (e.target.value === f.name) {
+        // console.log(f);
+      }
+    });
     // setShop(filteredData);
   };
-  const changeStatus = () => {};
+  const changeStatus = (index, e) => {
+    let newArray = [...shop];
+    if (e.target.checked) {
+      Resturant.updateResturantStatus(e.target.id).then((res) => {
+        console.log(res);
+        newArray[index]["status"] = "ACTIVE";
+      });
+    } else {
+      Resturant.updateResturantStatus(parseInt(e.target.id)).then((res) => {
+        console.log(res);
+        newArray[index]["status"] = "INACTIVE";
+      });
+    }
+
+    setShop(newArray);
+    // shop.map((m) => {
+    //   if (parseInt(e.target.id) === m.id) {
+    //     console.log(m);
+    //     if (e.target.checked) {
+    //       setShop({ status: "ACTIVE" });
+    //     } else {
+    //       setShop({ status: "INACTIVE" });
+    //     }
+    //   }
+    // });
+    console.log(shop);
+  };
   const goToAddShop = (e) => {
     const data = shop.filter((f) => {
       if (f.id === parseInt(e.target.id)) {
@@ -70,14 +85,14 @@ export default function Shop(props) {
                     </Form.Group>
                   </Form>
                 </Col>
-                {/* <Col>
-									<span className="d-block mt-5"></span>
-									<Button>Copy</Button>
-									<Button>CSV</Button>
-									<Button>Excel</Button>
-									<Button>Print</Button>
-									<Button>PDF</Button>
-								</Col> */}
+                <Col>
+                  <span className="d-block mt-5"></span>
+                  <Button>Copy</Button>
+                  <Button>CSV</Button>
+                  <Button>Excel</Button>
+                  <Button>Print</Button>
+                  <Button>PDF</Button>
+                </Col>
               </Row>
             </Card.Header>
             <Card.Body>
@@ -93,7 +108,7 @@ export default function Shop(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCountries.map((m) => (
+                  {shop.map((m, index) => (
                     <tr key={m.id}>
                       <th scope="row">{m.id}</th>
                       <td>{m.name}</td>
@@ -106,8 +121,10 @@ export default function Shop(props) {
                           {/* {...formik.getFieldProps('checkbox') */}
                           {/* m.status==='ACTIVE'?true:false */}
                           <input
-                            type="radio"
-                            isChecked={m.status === "ACTIVE" ? true : false}
+                            id={m.id}
+                            type="checkbox"
+                            checked={m.status === "ACTIVE" ? true : false}
+                            onChange={(e) => changeStatus(index, e)}
                           />
                           <span className="slider round"></span>
                         </label>

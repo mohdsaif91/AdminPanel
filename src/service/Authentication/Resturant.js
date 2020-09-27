@@ -16,13 +16,19 @@ function getResturant() {
 }
 function editResturant(editRest) {
   const url = `${routes.resturant.editResturant}`;
-  const method="PUT";
-  const body=editRest;
-  return axiosCall(url,method,body)
+  const method = "PUT";
+  const body = editRest;
+  return axiosCall(url, method, body);
+}
+function updateResturantStatus(restId) {
+  const url = `${routes.resturant.editResturant}/${restId}/status`;
+  const method = "GET";
+  return axiosCall(url, method, null);
 }
 
 export const Resturant = {
   addResturant,
   getResturant,
   editResturant,
+  updateResturantStatus,
 };
