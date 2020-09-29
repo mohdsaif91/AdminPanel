@@ -158,7 +158,6 @@ class Navigation extends Component {
       );
     }
     const role = localStorage.getItem("role");
-    console.log(role);
     return (
       <Aux>
         <nav className={navClass.join(" ")}>{navContent}</nav>

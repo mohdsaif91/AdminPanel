@@ -70,7 +70,7 @@ class AdminLayout extends Component {
     return (
       <Aux>
         <Fullscreen enabled={this.props.isFullScreen}>
-          {/* <Navigation /> */}
+          <Navigation />
           <NavBar />
           <div
             className="pcoded-main-container"
