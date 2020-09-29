@@ -6,7 +6,7 @@ const resturant = `${baseUrlV1}/Resturant`;
 const routes = {
   login: {
     adminLogin: `${baseUrlV1}/auth`,
-    shopLogin: `${loginurl}/shop-auth`,
+    shopLogin: `${baseUrlV1}/auth`,
     tokenIsValid: `${loginurl}/tokenIsValid`,
     getUser: `${baseUrlV1}login`,
   },
@@ -14,7 +14,6 @@ const routes = {
     addResturant: `${baseUrlV1}/shops`,
     getResturant: `${baseUrlV1}/shops`,
     editResturant: `${baseUrlV1}/shops`,
-    updateStatus: `${baseUrlV1}/shops`,
   },
 };
 export default routes;

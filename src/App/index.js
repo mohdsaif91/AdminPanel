@@ -9,6 +9,7 @@ import Aux from "../hoc/_Aux";
 import ScrollToTop from "./layout/ScrollToTop";
 import routes from "../route";
 import { Auth } from "../service";
+import ShopDashboard from "../shop/Dashboard";
 
 const AdminLayout = Loadable({
   loader: () => import("./layout/AdminLayout"),
@@ -61,7 +62,6 @@ function App() {
       />
     ) : null;
   });
-  console.log(JSON.stringify(userData) + "<>");
   return (
     <Aux>
       <ScrollToTop>
@@ -69,9 +69,9 @@ function App() {
           <Switch>
             {menu}
             <Route path="/" component={AdminLayout} />
+            <Route exact path="/shopDashboard" component={ShopDashboard} />
             {/* <Route exact path="/signin" component={signIn} />
-
-              <Redirect to="/signin" /> */}
+            <Redirect to="/signin" /> */}
           </Switch>
         </Suspense>
       </ScrollToTop>

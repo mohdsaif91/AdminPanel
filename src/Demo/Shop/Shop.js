@@ -3,6 +3,7 @@ import { Row, Col, Card, Form, Button, Table } from "react-bootstrap";
 import { Resturant } from "../../service";
 
 import Aux from "../../hoc/_Aux";
+import { data } from "jquery";
 
 const initialData = {};
 
@@ -27,32 +28,28 @@ export default function Shop(props) {
     });
     // setShop(filteredData);
   };
+
+  useEffect(() => {
+    setShop(shop);
+  }, [shop]);
+
   const changeStatus = (index, e) => {
     let newArray = [...shop];
     if (e.target.checked) {
-      Resturant.updateResturantStatus(e.target.id).then((res) => {
-        console.log(res);
-        newArray[index]["status"] = "ACTIVE";
-      });
+      Resturant.updateResturantStatus(parseInt(e.target.id))
+        .then((res) => {
+          newArray[index]["status"] = "ACTIVE";
+          setShop(newArray);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       Resturant.updateResturantStatus(parseInt(e.target.id)).then((res) => {
-        console.log(res);
         newArray[index]["status"] = "INACTIVE";
+        setShop(newArray);
       });
     }
-
-    setShop(newArray);
-    // shop.map((m) => {
-    //   if (parseInt(e.target.id) === m.id) {
-    //     console.log(m);
-    //     if (e.target.checked) {
-    //       setShop({ status: "ACTIVE" });
-    //     } else {
-    //       setShop({ status: "INACTIVE" });
-    //     }
-    //   }
-    // });
-    console.log(shop);
   };
   const goToAddShop = (e) => {
     const data = shop.filter((f) => {

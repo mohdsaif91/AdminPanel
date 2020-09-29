@@ -144,7 +144,6 @@ export default function AddShop(props) {
         [e.target.name]: e.target.value,
       });
     }
-    console.log(data);
   };
 
   const getFormData = (data) => {
@@ -162,7 +161,7 @@ export default function AddShop(props) {
     Resturant.editResturant(formData).then((response) => {
       if (response.status === 200) {
         toast.success("Edit SucessFull!", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -172,7 +171,7 @@ export default function AddShop(props) {
         });
       } else {
         toast.warning("Edit Failed!", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -204,7 +203,8 @@ export default function AddShop(props) {
       });
   };
 
-  const shopDataL = data !== undefined ? data : console.log("empty hai");
+  const shopDataL = props.location.editShopData === undefined ? true : false;
+  console.log(data);
   return (
     <Aux>
       <ToastContainer
@@ -220,14 +220,13 @@ export default function AddShop(props) {
       />
       {/* Same as */}
       <ToastContainer />
-      {shopDataL === undefined ? (
+      {shopDataL ? (
         <Row>
           <Col>
             <Card>
               <Card.Header>
                 <Card.Title as="h5">Add Shop Details</Card.Title>
               </Card.Header>
-
               <Card.Body>
                 <Form onSubmit={displayData}>
                   <Row>
@@ -463,7 +462,7 @@ export default function AddShop(props) {
                         <Form.Control
                           required
                           type="text"
-                          value={shopDataL.name}
+                          value={data.name}
                           placeholder="Enter Name"
                           name="name"
                           onChange={(e) => getData(e)}
@@ -475,7 +474,7 @@ export default function AddShop(props) {
                           type="email"
                           placeholder="Enter Email Address"
                           name="email"
-                          value={shopDataL.email}
+                          value={data.email}
                           required
                           onChange={(e) => getData(e)}
                         />
@@ -491,7 +490,7 @@ export default function AddShop(props) {
                           type="text"
                           placeholder="Enter Contact Details"
                           name="phone"
-                          value={shopDataL.phone}
+                          value={data.phone}
                           onChange={(e) => getData(e)}
                         />
                         <div className="row text-danger mt-1 mx-auto">
@@ -504,7 +503,7 @@ export default function AddShop(props) {
                           required
                           as="select"
                           name="status"
-                          value={shopDataL.status}
+                          value={data.status}
                           onChange={(e) => getData(e)}
                         >
                           <option>ACTIVE</option>
@@ -521,7 +520,7 @@ export default function AddShop(props) {
                           type="text"
                           placeholder="Description"
                           name="description"
-                          value={shopDataL.description}
+                          value={data.description}
                           onChange={(e) => getData(e)}
                         />
                       </Form.Group>
@@ -533,7 +532,7 @@ export default function AddShop(props) {
                           as="textarea"
                           rows="3"
                           name="address"
-                          value={shopDataL.address}
+                          value={data.address}
                           onChange={(e) => getData(e)}
                         />
                       </Form.Group>
@@ -543,7 +542,7 @@ export default function AddShop(props) {
                           required
                           as="select"
                           name="type"
-                          value={shopDataL.type}
+                          value={data.type}
                           onChange={(e) => getData(e)}
                         >
                           <option>Resturant</option>
@@ -562,7 +561,7 @@ export default function AddShop(props) {
                                 required
                                 type="checkbox"
                                 name="available"
-                                checked={shopDataL.available}
+                                checked={data.available}
                                 onChange={(e) => getData(e)}
                               />
                             </Form.Group>
@@ -577,7 +576,7 @@ export default function AddShop(props) {
                                 required
                                 type="checkbox"
                                 name="recommended"
-                                checked={shopDataL.recommended}
+                                checked={data.recommended}
                                 onChange={(e) => getData(e)}
                               />
                             </Form.Group>
@@ -586,7 +585,7 @@ export default function AddShop(props) {
                       </Col>
                       <Form.Group className="mt-5">
                         <Form.Label>Shop logo</Form.Label>
-                        <img className="shopBannerImage" src={shopDataL.logo} />
+                        <img className="shopBannerImage" src={data.logo} />
                         <input
                           required
                           type="file"
@@ -603,7 +602,7 @@ export default function AddShop(props) {
                           required
                           type="text"
                           name="lat"
-                          value={shopDataL.lat}
+                          value={data.lat}
                           onChange={(e) => getData(e)}
                         />
                       </Form.Group>
@@ -615,7 +614,7 @@ export default function AddShop(props) {
                           required
                           type="text"
                           name="lng"
-                          value={shopDataL.lng}
+                          value={data.lng}
                           onChange={(e) => getData(e)}
                         />
                       </Form.Group>

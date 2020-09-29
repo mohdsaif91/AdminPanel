@@ -17,7 +17,7 @@ const initialValues = {
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid Email Format"),
   password: Yup.string()
-    .min(8, "Atleast 8 character required*")
+    .min(4, "Atleast 4 character required*")
     .required("New Password is required"),
 });
 const SignUp1 = (props) => {
@@ -39,6 +39,8 @@ const SignUp1 = (props) => {
       Auth.loginShop(formik.values)
         .then((response) => {
           if (response.status === 200) {
+            localStorage.setItem("role", response.data.role);
+            props.history.push("/shopDashboard");
           } else {
             setLog("Username or Password Incorrect");
           }

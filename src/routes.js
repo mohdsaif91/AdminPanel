@@ -7,6 +7,8 @@ global.jQuery = $;
 
 const DashboardDefault = React.lazy(() => import("./Demo/Dashboard/Default"));
 
+// const ShopDashBoard = React.lazy(() => import("./shop/Dashboard"));
+
 const UIBasicButton = React.lazy(() =>
   import("./Demo/UIElements/Basic/Button")
 );
@@ -38,25 +40,13 @@ const GoogleMap = React.lazy(() => import("./Demo/Maps/GoogleMap/index"));
 const OtherSamplePage = React.lazy(() => import("./Demo/Other/SamplePage"));
 const OtherDocs = React.lazy(() => import("./Demo/Other/Docs"));
 
-const Banner = React.lazy(() =>
-  import("./Demo/Shop/Banner")
-);
-const Category = React.lazy(() =>
-  import("./Demo/Shop/Category")
-);
-const SubCategory = React.lazy(() =>
-  import("./Demo/Shop/SubCategory")
-);
+const Banner = React.lazy(() => import("./Demo/Shop/Banner"));
+const Category = React.lazy(() => import("./Demo/Shop/Category"));
+const SubCategory = React.lazy(() => import("./Demo/Shop/SubCategory"));
 
-const ProductList = React.lazy(() =>
-  import("./Demo/Shop/ProductList")
-);
-const ProductBucket = React.lazy(() =>
-  import("./Demo/Shop/ProductBucket")
-);
-const WeightMaster = React.lazy(() =>
-  import("./Demo/Shop/WeightMaster")
-);
+const ProductList = React.lazy(() => import("./Demo/Shop/ProductList"));
+const ProductBucket = React.lazy(() => import("./Demo/Shop/ProductBucket"));
+const WeightMaster = React.lazy(() => import("./Demo/Shop/WeightMaster"));
 
 const shopBannerList = React.lazy(() =>
   import("./Demo/ShopBanner/ShopBannerList")
@@ -149,37 +139,37 @@ const routes = [
     path: "/banner",
     exact: true,
     name: "Banner",
-    component:Banner,
+    component: Banner,
   },
   {
     path: "/category",
     exact: true,
     name: "Category",
-    component:Category,
+    component: Category,
   },
   {
     path: "/subcategory",
     exact: true,
     name: "SubCategory",
-    component:SubCategory,
+    component: SubCategory,
   },
   {
     path: "/productlist",
     exact: true,
     name: "ProductList",
-    component:ProductList,
+    component: ProductList,
   },
   {
     path: "/productbucket",
     exact: true,
     name: "ProductBucket",
-    component:ProductBucket,
+    component: ProductBucket,
   },
   {
     path: "/weightmaster",
     exact: true,
     name: "WeightMaster",
-    component:WeightMaster,
+    component: WeightMaster,
   },
   {
     path: "/ShopBannerList",
@@ -193,6 +183,12 @@ const routes = [
     name: "Add-Shop-Banner",
     component: addShopBannerList,
   },
+  // {
+  //   path: "/shopDashboard",
+  //   exact: true,
+  //   name: "shopDashboard",
+  //   component: ShopDashBoard,
+  // },
   { path: "/addShop", exact: true, name: "Add Shop", component: addShop },
   { path: "/Shop", exact: true, name: "Shop", component: Shop },
 ];
